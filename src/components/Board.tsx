@@ -36,37 +36,41 @@ export default function Board({ initialPosts, initialIsAdmin }: BoardProps) {
       else if (e.deltaY > 0) setFiltersVisible(false)
     }
 
-    // Desktop scroll fallback
+    // Desktop scroll fallback — skip on touch devices to avoid fighting touch handlers
     function onScroll() {
-      if (!ready) return
+      if (!ready || 'ontouchstart' in window) return
       const current = window.scrollY
       if (current < lastScrollY.current - 5) setFiltersVisible(true)
       else if (current > lastScrollY.current + 5) setFiltersVisible(false)
       lastScrollY.current = current
     }
 
-    // Touch — detect swipe direction regardless of scroll position
+    // Touch — detect swipe direction on finger lift, ignore taps
     let touchStartY = 0
+    let hasShownOnThisTouch = false
     function onTouchStart(e: TouchEvent) {
       touchStartY = e.touches[0].clientY
+      hasShownOnThisTouch = false
     }
-    function onTouchMove(e: TouchEvent) {
-      if (!ready) return
-      const delta = e.touches[0].clientY - touchStartY
-      if (delta > 10) setFiltersVisible(true)
-      else if (delta < -10) setFiltersVisible(false)
+    function onTouchEnd(e: TouchEvent) {
+      if (!ready || hasShownOnThisTouch) return
+      const delta = e.changedTouches[0].clientY - touchStartY
+      if (delta > 20) {
+        setFiltersVisible(true)
+        hasShownOnThisTouch = true
+      }
     }
 
     window.addEventListener('wheel', onWheel, { passive: true })
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('touchstart', onTouchStart, { passive: true })
-    window.addEventListener('touchmove', onTouchMove, { passive: true })
+    window.addEventListener('touchend', onTouchEnd, { passive: true })
     return () => {
       clearTimeout(timer)
       window.removeEventListener('wheel', onWheel)
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('touchstart', onTouchStart)
-      window.removeEventListener('touchmove', onTouchMove)
+      window.removeEventListener('touchend', onTouchEnd)
     }
   }, [])
 
