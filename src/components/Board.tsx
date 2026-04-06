@@ -83,7 +83,7 @@ export default function Board({ initialPosts, initialIsAdmin }: BoardProps) {
     .sort((a, b) => b[1] - a[1])
     .map(([tag]) => tag)
 
-  const availableTypes = (['image', 'gif', 'video', 'audio'] as const).filter(
+  const availableTypes = (['image', 'gif', 'video', 'youtube', 'audio'] as const).filter(
     (t) => posts.some((p) => p.type === t)
   )
 

@@ -21,7 +21,7 @@ export async function DELETE(
     .eq('id', id)
     .single()
 
-  if (post) {
+  if (post && post.type !== 'youtube') {
     const resourceType = post.type === 'audio' ? 'raw' : post.type === 'video' ? 'video' : 'image'
     await cloudinary.uploader.destroy(post.public_id, { resource_type: resourceType })
   }

@@ -103,6 +103,15 @@ export default function Lightbox({ post, onClose, onPrev, onNext }: LightboxProp
               }
             }}
           />
+        ) : post.type === 'youtube' ? (
+          <div className="w-full aspect-video rounded-xl overflow-hidden">
+            <iframe
+              src={`https://www.youtube.com/embed/${post.public_id}?autoplay=1`}
+              className="w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
         ) : (
           <div className="w-full bg-neutral-900 rounded-xl p-8 flex flex-col items-center gap-4">
             <audio src={post.url} controls className="w-full" autoPlay />

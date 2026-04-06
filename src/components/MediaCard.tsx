@@ -39,6 +39,23 @@ export default function MediaCard({ post, onClick, onDelete, isAdmin }: MediaCar
           playsInline
           autoPlay={hovered}
         />
+      ) : post.type === 'youtube' ? (
+        <div className="relative w-full">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`https://img.youtube.com/vi/${post.public_id}/hqdefault.jpg`}
+            alt={post.title ?? ''}
+            className="w-full block object-cover"
+            loading="lazy"
+          />
+          <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${hovered ? 'opacity-100' : 'opacity-70'}`}>
+            <div className="bg-red-600 rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
+              <svg viewBox="0 0 24 24" className="w-6 h-6 text-white fill-current ml-0.5" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+          </div>
+        </div>
       ) : (
         <div className="flex items-center justify-center h-32 bg-neutral-800">
           <AudioIcon />

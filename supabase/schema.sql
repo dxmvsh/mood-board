@@ -2,7 +2,7 @@
 
 create table if not exists posts (
   id          uuid        default gen_random_uuid() primary key,
-  type        text        not null check (type in ('image', 'video', 'audio', 'gif')),
+  type        text        not null check (type in ('image', 'video', 'audio', 'gif', 'youtube')),
   url         text        not null,
   public_id   text        not null,
   title       text,
