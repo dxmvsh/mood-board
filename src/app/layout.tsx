@@ -22,6 +22,10 @@ export const viewport = {
 export const metadata: Metadata = {
   title: "dxmvsh worldwide",
   description: "A personal board",
+  icons: {
+    icon: '/favicon.png',
+    apple: '/favicon.png',
+  },
 };
 
 export default function RootLayout({
