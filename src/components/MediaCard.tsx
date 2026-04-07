@@ -33,6 +33,9 @@ export default function MediaCard({ post, onClick, onDelete, isAdmin }: MediaCar
       ) : post.type === 'video' ? (
         <video
           src={post.url}
+          poster={post.url
+            .replace('/video/upload/', '/video/upload/so_0/')
+            .replace(/\.(mp4|webm|mov|avi)(\?.*)?$/i, '.jpg')}
           className="w-full block"
           muted
           loop
