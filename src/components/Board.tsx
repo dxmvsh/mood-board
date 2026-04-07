@@ -105,17 +105,6 @@ export default function Board({ initialPosts, initialIsAdmin }: BoardProps) {
 
   return (
     <main className="min-h-dvh text-white">
-      {/* Mesh gradient background */}
-      <div className="fixed inset-0 -z-10 overflow-hidden" style={{ background: '#0c1614' }}>
-        <div className="blob-1 absolute -top-[20%] -left-[15%] w-[70vw] h-[70vw] rounded-full opacity-80"
-          style={{ background: 'radial-gradient(circle, #3dd6b0 0%, #1a9e82 40%, transparent 70%)', filter: 'blur(60px)' }} />
-        <div className="blob-2 absolute top-[45%] -left-[10%] w-[80vw] h-[80vw] rounded-full opacity-75"
-          style={{ background: 'radial-gradient(circle, #5ee87a 0%, #2db84a 35%, #3dd6b0 60%, transparent 75%)', filter: 'blur(60px)' }} />
-        <div className="blob-3 absolute top-[30%] -right-[15%] w-[45vw] h-[45vw] rounded-full opacity-60"
-          style={{ background: 'radial-gradient(circle, #60a5fa 0%, #3b82f6 40%, transparent 70%)', filter: 'blur(50px)' }} />
-      </div>
-      {/* Dark overlay above blobs, below content */}
-      <div className="fixed inset-0 bg-black/30" style={{ zIndex: -9 }} />
 
       <header className="relative flex items-center justify-between px-6 py-4 border-b border-white/10">
         <h1 className="text-lg font-semibold tracking-tight absolute left-1/2 -translate-x-1/2 lowercase">board</h1>
