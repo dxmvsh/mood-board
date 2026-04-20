@@ -6,6 +6,7 @@ import Lightbox from '@/components/Lightbox'
 import { Post } from '@/types'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import ScrollHeader from './ScrollHeader'
 
 interface BoardProps {
   initialPosts: Post[]
@@ -132,54 +133,52 @@ export default function Board({ initialPosts, initialIsAdmin }: BoardProps) {
       </header>
 
       {/* Filters — revealed on scroll up */}
-      <div className={`overflow-hidden transition-all duration-300 ease-in-out ${filtersVisible ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
-        {availableTypes.length > 1 && (
-          <div className="flex gap-2 overflow-x-auto px-4 pt-3 pb-1 scrollbar-hide h-12 items-center">
-            <button
-              onClick={() => setActiveType(null)}
-              className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                activeType === null ? 'bg-white text-black' : 'bg-white/10 text-white hover:bg-white/20'
-              }`}
-            >
-              all
-            </button>
-            {availableTypes.map((type) => (
+      <ScrollHeader>
+        <div className={`overflow-hidden transition-all duration-300 ease-in-out ${filtersVisible ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
+          {availableTypes.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto px-4 pt-3 pb-1 scrollbar-hide h-12 items-center">
               <button
-                key={type}
-                onClick={() => setActiveType(activeType === type ? null : type)}
-                className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors lowercase ${
-                  activeType === type ? 'bg-white text-black' : 'bg-white/10 text-white hover:bg-white/20'
-                }`}
+                onClick={() => setActiveType(null)}
+                className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${activeType === null ? 'bg-white text-black' : 'bg-white/10 text-white hover:bg-white/20'
+                  }`}
               >
-                {type}
+                all
               </button>
-            ))}
-          </div>
-        )}
-        {allTags.length > 0 && (
-          <div className="flex gap-2 overflow-x-auto px-4 py-2 scrollbar-hide h-12 items-center">
-            <button
-              onClick={() => setActiveTag(null)}
-              className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                activeTag === null ? 'bg-white text-black' : 'bg-white/10 text-white hover:bg-white/20'
-              }`}
-            >
-              all
-            </button>
-            {allTags.map((tag) => (
+              {availableTypes.map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setActiveType(activeType === type ? null : type)}
+                  className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors lowercase ${activeType === type ? 'bg-white text-black' : 'bg-white/10 text-white hover:bg-white/20'
+                    }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+          )}
+          {allTags.length > 0 && (
+            <div className="flex gap-2 overflow-x-auto px-4 py-2 scrollbar-hide h-12 items-center">
               <button
-                key={tag}
-                onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-                className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                  activeTag === tag ? 'bg-white text-black' : 'bg-white/10 text-white hover:bg-white/20'
-                }`}
+                onClick={() => setActiveTag(null)}
+                className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${activeTag === null ? 'bg-white text-black' : 'bg-white/10 text-white hover:bg-white/20'
+                  }`}
               >
-                {tag}
+                all
               </button>
-            ))}
-          </div>
-        )}
-      </div>
+              {allTags.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+                  className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${activeTag === tag ? 'bg-white text-black' : 'bg-white/10 text-white hover:bg-white/20'
+                    }`}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </ScrollHeader>
 
       <MasonryGrid
         posts={filteredPosts}
