@@ -24,7 +24,7 @@ export default function UploadForm({ onSuccess }: UploadFormProps) {
   const [youtubeUrl, setYoutubeUrl] = useState('')
 
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<{ message: string; status?: number } | null>(null)
 
   useEffect(() => {
     function handlePaste(e: ClipboardEvent) {
@@ -64,28 +64,32 @@ export default function UploadForm({ onSuccess }: UploadFormProps) {
     setLoading(true)
     setError(null)
 
-    const formData = new FormData()
-    formData.append('file', file)
-    if (title) formData.append('title', title)
-    if (description) formData.append('description', description)
-    if (tags) formData.append('tags', tags)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      if (title) formData.append('title', title)
+      if (description) formData.append('description', description)
+      if (tags) formData.append('tags', tags)
 
-    const res = await fetch('/api/upload', { method: 'POST', body: formData })
-    const data = await res.json()
+      const res = await fetch('/api/upload', { method: 'POST', body: formData })
+      const data = await res.json()
 
-    setLoading(false)
+      if (!res.ok) {
+        setError({ message: data.error ?? 'Upload failed', status: res.status })
+        return
+      }
 
-    if (!res.ok) {
-      setError(data.error ?? 'Upload failed')
-      return
+      setFile(null)
+      setPreview(null)
+      setTitle('')
+      setDescription('')
+      setTags('')
+      onSuccess()
+    } catch {
+      setError({ message: 'Network error. Please check your connection and try again.' })
+    } finally {
+      setLoading(false)
     }
-
-    setFile(null)
-    setPreview(null)
-    setTitle('')
-    setDescription('')
-    setTags('')
-    onSuccess()
   }
 
   async function handleYouTubeSubmit(e: React.FormEvent) {
@@ -95,25 +99,29 @@ export default function UploadForm({ onSuccess }: UploadFormProps) {
     setLoading(true)
     setError(null)
 
-    const res = await fetch('/api/youtube', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: youtubeUrl, title, description, tags }),
-    })
-    const data = await res.json()
+    try {
+      const res = await fetch('/api/youtube', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: youtubeUrl, title, description, tags }),
+      })
+      const data = await res.json()
 
-    setLoading(false)
+      if (!res.ok) {
+        setError({ message: data.error ?? 'Failed to add YouTube video', status: res.status })
+        return
+      }
 
-    if (!res.ok) {
-      setError(data.error ?? 'Failed to add YouTube video')
-      return
+      setYoutubeUrl('')
+      setTitle('')
+      setDescription('')
+      setTags('')
+      onSuccess()
+    } catch {
+      setError({ message: 'Network error. Please check your connection and try again.' })
+    } finally {
+      setLoading(false)
     }
-
-    setYoutubeUrl('')
-    setTitle('')
-    setDescription('')
-    setTags('')
-    onSuccess()
   }
 
   const inputClass = 'w-full bg-neutral-800 text-white rounded-xl px-4 py-2.5 text-sm placeholder-neutral-500 outline-none focus:ring-1 focus:ring-white/30'
@@ -190,7 +198,14 @@ export default function UploadForm({ onSuccess }: UploadFormProps) {
           <textarea placeholder="Description (optional)" value={description} onChange={(e) => setDescription(e.target.value)} rows={2} className={`${inputClass} resize-none`} />
           <input type="text" placeholder="Tags, comma-separated (optional)" value={tags} onChange={(e) => setTags(e.target.value)} className={inputClass} />
 
-          {error && <p className="text-red-400 text-sm">{error}</p>}
+          {error && (
+            <div className="rounded-xl bg-red-950/50 border border-red-800/60 px-4 py-3 space-y-0.5">
+              <p className="text-red-400 text-xs font-semibold uppercase tracking-wide">
+                Error{error.status ? ` ${error.status}` : ''}
+              </p>
+              <p className="text-red-300 text-sm">{error.message}</p>
+            </div>
+          )}
 
           <button
             type="submit"
@@ -215,7 +230,14 @@ export default function UploadForm({ onSuccess }: UploadFormProps) {
           <textarea placeholder="Description (optional)" value={description} onChange={(e) => setDescription(e.target.value)} rows={2} className={`${inputClass} resize-none`} />
           <input type="text" placeholder="Tags, comma-separated (optional)" value={tags} onChange={(e) => setTags(e.target.value)} className={inputClass} />
 
-          {error && <p className="text-red-400 text-sm">{error}</p>}
+          {error && (
+            <div className="rounded-xl bg-red-950/50 border border-red-800/60 px-4 py-3 space-y-0.5">
+              <p className="text-red-400 text-xs font-semibold uppercase tracking-wide">
+                Error{error.status ? ` ${error.status}` : ''}
+              </p>
+              <p className="text-red-300 text-sm">{error.message}</p>
+            </div>
+          )}
 
           <button
             type="submit"
